@@ -13,13 +13,8 @@ impl Return {
 }
 
 impl IndentFormatter for Return {
-    fn fmt_indent(
-        &self,
-        f: &mut core::fmt::Formatter<'_>,
-        indent_count: usize,
-    ) -> core::fmt::Result {
-        indent_writeln!(f, indent_count, "{} {}", Self::KEYWORD, self.value);
-        core::fmt::Result::Ok(())
+    fn fmt_indent(&self, f: &mut core::fmt::Formatter<'_>, indent_count: usize) -> usize {
+        indent_writeln!(f, indent_count, "{} {}", Self::KEYWORD, self.value)
     }
 }
 

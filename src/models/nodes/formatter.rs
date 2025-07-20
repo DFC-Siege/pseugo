@@ -1,9 +1,5 @@
 pub trait IndentFormatter {
-    fn fmt_indent(
-        &self,
-        f: &mut core::fmt::Formatter<'_>,
-        indent_count: usize,
-    ) -> core::fmt::Result;
+    fn fmt_indent(&self, f: &mut core::fmt::Formatter<'_>, indent_count: usize) -> usize;
 }
 
 #[macro_export]
@@ -12,7 +8,8 @@ macro_rules! indent_write {
         {
             const TAB_SIZE: usize = 8;
             let spaces = " ".repeat(TAB_SIZE * $indent);
-            write!($f, "{}{}", spaces, format_args!($($arg)*))?
+            write!($f, "{}{}", spaces, format_args!($($arg)*));
+            $indent
         }
     };
 }
@@ -23,7 +20,8 @@ macro_rules! indent_writeln {
         {
             const TAB_SIZE: usize = 8;
             let spaces = " ".repeat(TAB_SIZE * $indent);
-            writeln!($f, "{}{}", spaces, format_args!($($arg)*))?
+            writeln!($f, "{}{}", spaces, format_args!($($arg)*));
+            $indent
         }
     };
 }
@@ -34,7 +32,8 @@ macro_rules! indent_format {
         {
             const TAB_SIZE: usize = 8;
             let spaces = " ".repeat(TAB_SIZE * $indent);
-            format!("{}{}", spaces, format_args!($($arg)*))
+            format!("{}{}", spaces, format_args!($($arg)*));
+            $indent
         }
     };
 }
@@ -45,7 +44,8 @@ macro_rules! indent_format_args {
         {
             const TAB_SIZE: usize = 8;
             let spaces = " ".repeat(TAB_SIZE * $indent);
-            format_args!("{}{}", spaces, format_args!($($arg)*))
+            format_args!("{}{}", spaces, format_args!($($arg)*));
+            $indent
         }
     };
 }

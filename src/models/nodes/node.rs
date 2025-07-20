@@ -37,13 +37,8 @@ impl Parsable for Break {
 }
 
 impl IndentFormatter for Break {
-    fn fmt_indent(
-        &self,
-        f: &mut core::fmt::Formatter<'_>,
-        indent_count: usize,
-    ) -> core::fmt::Result {
-        indent_writeln!(f, indent_count, "break");
-        Ok(())
+    fn fmt_indent(&self, f: &mut core::fmt::Formatter<'_>, indent_count: usize) -> usize {
+        indent_writeln!(f, indent_count, "break")
     }
 }
 
@@ -66,13 +61,8 @@ impl Parsable for Continue {
 }
 
 impl IndentFormatter for Continue {
-    fn fmt_indent(
-        &self,
-        f: &mut core::fmt::Formatter<'_>,
-        indent_count: usize,
-    ) -> core::fmt::Result {
-        indent_writeln!(f, indent_count, "continue");
-        Ok(())
+    fn fmt_indent(&self, f: &mut core::fmt::Formatter<'_>, indent_count: usize) -> usize {
+        indent_writeln!(f, indent_count, "continue")
     }
 }
 
@@ -133,7 +123,6 @@ impl Node {
             try_parse!(Return, Return);
             try_parse!(Comment, Comment);
 
-            // panic!("Parts: {parts:?}");
             return Err(eyre!("Unknown node type: {first}"));
         }
 
@@ -142,7 +131,7 @@ impl Node {
 }
 
 impl IndentFormatter for Node {
-    fn fmt_indent(&self, f: &mut fmt::Formatter<'_>, indent_count: usize) -> fmt::Result {
+    fn fmt_indent(&self, f: &mut fmt::Formatter<'_>, indent_count: usize) -> usize {
         match self {
             Node::Start(val) => val.fmt_indent(f, indent_count),
             Node::Loop(val) => val.fmt_indent(f, indent_count),
@@ -156,14 +145,13 @@ impl IndentFormatter for Node {
             Node::Return(val) => val.fmt_indent(f, indent_count),
             Node::Comment(val) => val.fmt_indent(f, indent_count),
             Node::End(val) => val.fmt_indent(f, indent_count),
-        }?;
-
-        Ok(())
+        }
     }
 }
 
 impl fmt::Display for Node {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        self.fmt_indent(f, 0)
+        self.fmt_indent(f, 0);
+        Ok(())
     }
 }

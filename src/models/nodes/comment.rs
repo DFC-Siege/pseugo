@@ -10,19 +10,14 @@ pub struct Comment {
 }
 
 impl IndentFormatter for Comment {
-    fn fmt_indent(
-        &self,
-        f: &mut core::fmt::Formatter<'_>,
-        indent_count: usize,
-    ) -> core::fmt::Result {
-        indent_writeln!(f, indent_count, "// {}", self.value);
-        Ok(())
+    fn fmt_indent(&self, f: &mut core::fmt::Formatter<'_>, indent_count: usize) -> usize {
+        indent_writeln!(f, indent_count, "// {}", self.value)
     }
 }
 
 impl Parsable for Comment {
     fn matches(value: &str) -> bool {
-        value.to_lowercase() == "function"
+        value.to_lowercase() == "//"
     }
 
     fn parse<'a>(parts: &'a [&'a str]) -> Result<(Box<Self>, &'a [&'a str])> {

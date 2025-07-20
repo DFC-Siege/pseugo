@@ -14,13 +14,13 @@ impl Start {
 }
 
 impl IndentFormatter for Start {
-    fn fmt_indent(&self, f: &mut fmt::Formatter<'_>, indent_count: usize) -> fmt::Result {
-        indent_writeln!(f, indent_count, "start");
+    fn fmt_indent(&self, f: &mut fmt::Formatter<'_>, mut indent_count: usize) -> usize {
+        indent_count = indent_writeln!(f, indent_count, "start");
 
         for n in &self.body {
-            n.fmt_indent(f, indent_count)?;
+            n.fmt_indent(f, indent_count);
         }
-        Ok(())
+        indent_count
     }
 }
 

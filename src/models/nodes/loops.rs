@@ -25,19 +25,21 @@ pub struct Loop {
 }
 
 impl IndentFormatter for Loop {
-    fn fmt_indent(&self, f: &mut fmt::Formatter<'_>, indent_count: usize) -> fmt::Result {
+    fn fmt_indent(&self, f: &mut fmt::Formatter<'_>, mut indent_count: usize) -> usize {
         match &self.loop_type {
             LoopType::While(condition) => {
-                indent_writeln!(f, indent_count, "while {condition}");
+                indent_count = indent_writeln!(f, indent_count, "while {condition}");
             }
             LoopType::For { item, list } => {
-                indent_writeln!(f, indent_count, "for {item} in {list}");
+                indent_count = indent_writeln!(f, indent_count, "for {item} in {list}");
             }
         }
+
+        indent_count += 1;
         for n in &self.body {
-            n.fmt_indent(f, indent_count + 1)?;
+            indent_count = n.fmt_indent(f, indent_count);
         }
-        Ok(())
+        indent_count
     }
 }
 

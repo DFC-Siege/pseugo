@@ -11,13 +11,8 @@ impl End {
 }
 
 impl IndentFormatter for End {
-    fn fmt_indent(
-        &self,
-        f: &mut core::fmt::Formatter<'_>,
-        indent_count: usize,
-    ) -> core::fmt::Result {
-        indent_writeln!(f, indent_count - 1, "{}", Self::END);
-        Ok(())
+    fn fmt_indent(&self, f: &mut core::fmt::Formatter<'_>, indent_count: usize) -> usize {
+        indent_writeln!(f, indent_count - 1, "{}", Self::END)
     }
 }
 
