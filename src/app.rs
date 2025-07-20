@@ -5,7 +5,7 @@ use ratatui::{
     DefaultTerminal, Frame,
     layout::Rect,
     style::Stylize,
-    text::Line,
+    text::{Line, Text},
     widgets::{Block, Paragraph, Scrollbar, ScrollbarOrientation, ScrollbarState},
 };
 
@@ -69,8 +69,13 @@ impl App {
                 "Parse failed - see console".to_string()
             }
         };
+        let styled_text: Text = text
+            .lines()
+            .map(|line| Line::from(line).blue())
+            .collect::<Vec<Line>>()
+            .into();
 
-        let line_count = text.lines().count() as u16;
+        let line_count = styled_text.lines.len() as u16;
         self.content_height = line_count;
 
         let main_area = frame.area();
@@ -85,7 +90,7 @@ impl App {
             height: main_area.height,
         };
 
-        let paragraph = Paragraph::new(text)
+        let paragraph = Paragraph::new(styled_text)
             .block(Block::bordered().title(title))
             .scroll((self.scroll, 0));
 
