@@ -6,13 +6,13 @@ pub trait IndentFormatter {
     ) -> color_eyre::Result<usize>;
 }
 
+pub const TAB_SIZE: usize = 8;
+
 #[macro_export]
 macro_rules! indent_write {
     ($f:expr, $indent:expr, $($arg:tt)*) => {
         {
-            const TAB_SIZE: usize = 8;
-            let spaces = " ".repeat(TAB_SIZE * $indent);
-            write!($f, "{}{}", spaces, format_args!($($arg)*))
+            write!($f, $($arg)*)
                 .map(|_| $indent)
                 .map_err(|e| color_eyre::eyre::eyre!("Failed to write indented text: {}", e))
         }
@@ -23,39 +23,11 @@ macro_rules! indent_write {
 macro_rules! indent_writeln {
     ($f:expr, $indent:expr, $($arg:tt)*) => {
         {
-            const TAB_SIZE: usize = 8;
-            let spaces = " ".repeat(TAB_SIZE * $indent);
-            writeln!($f, "{}{}", spaces, format_args!($($arg)*))
+            let spaces = " ".repeat($crate::models::nodes::formatter::TAB_SIZE * $indent);
+            write!($f, "{}", spaces)?;
+            write!($f, $($arg)*)
                 .map(|_| $indent)
                 .map_err(|e| color_eyre::eyre::eyre!("Failed to write indented line: {}", e))
-        }
-    };
-}
-
-#[macro_export]
-macro_rules! indent_format {
-    ($indent:expr, $($arg:tt)*) => {
-        {
-            const TAB_SIZE: usize = 8;
-            let spaces = " ".repeat(TAB_SIZE * $indent);
-            Ok::<usize, color_eyre::eyre::Error>({
-                format!("{}{}", spaces, format_args!($($arg)*));
-                $indent
-            })
-        }
-    };
-}
-
-#[macro_export]
-macro_rules! indent_format_args {
-    ($indent:expr, $($arg:tt)*) => {
-        {
-            const TAB_SIZE: usize = 8;
-            let spaces = " ".repeat(TAB_SIZE * $indent);
-            Ok::<(std::fmt::Arguments<'_>, usize), color_eyre::eyre::Error>((
-                format_args!("{}{}", spaces, format_args!($($arg)*)),
-                $indent
-            ))
         }
     };
 }

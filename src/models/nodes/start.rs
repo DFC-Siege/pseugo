@@ -21,7 +21,7 @@ impl IndentFormatter for Start {
         indent_count = indent_writeln!(f, indent_count, "start")?;
 
         for n in &self.body {
-            n.fmt_indent(f, indent_count)?;
+            indent_count = n.fmt_indent(f, indent_count)?;
         }
         Ok(indent_count)
     }
