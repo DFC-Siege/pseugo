@@ -43,6 +43,7 @@ impl App {
         let pseudocode = "
         start
         if x > 5
+            -- test --
             assign y = x + 10
             while counter < 100
                 assign counter = counter + 1
