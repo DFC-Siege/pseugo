@@ -11,7 +11,11 @@ impl End {
 }
 
 impl IndentFormatter for End {
-    fn fmt_indent(&self, f: &mut core::fmt::Formatter<'_>, indent_count: usize) -> usize {
+    fn fmt_indent(
+        &self,
+        f: &mut core::fmt::Formatter<'_>,
+        indent_count: usize,
+    ) -> color_eyre::Result<usize> {
         indent_writeln!(f, indent_count - 1, "{}", Self::END)
     }
 }

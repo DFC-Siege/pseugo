@@ -3,7 +3,6 @@ use crate::{
     models::nodes::{formatter::IndentFormatter, node::Node, parsing::Parsable},
 };
 use color_eyre::eyre::{Result, eyre};
-use core::fmt;
 
 pub struct Start {
     body: Vec<Node>,
@@ -14,13 +13,17 @@ impl Start {
 }
 
 impl IndentFormatter for Start {
-    fn fmt_indent(&self, f: &mut fmt::Formatter<'_>, mut indent_count: usize) -> usize {
-        indent_count = indent_writeln!(f, indent_count, "start");
+    fn fmt_indent(
+        &self,
+        f: &mut core::fmt::Formatter<'_>,
+        mut indent_count: usize,
+    ) -> color_eyre::Result<usize> {
+        indent_count = indent_writeln!(f, indent_count, "start")?;
 
         for n in &self.body {
-            n.fmt_indent(f, indent_count);
+            n.fmt_indent(f, indent_count)?;
         }
-        indent_count
+        Ok(indent_count)
     }
 }
 

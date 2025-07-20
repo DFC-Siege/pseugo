@@ -37,7 +37,11 @@ impl Parsable for Break {
 }
 
 impl IndentFormatter for Break {
-    fn fmt_indent(&self, f: &mut core::fmt::Formatter<'_>, indent_count: usize) -> usize {
+    fn fmt_indent(
+        &self,
+        f: &mut core::fmt::Formatter<'_>,
+        indent_count: usize,
+    ) -> color_eyre::Result<usize> {
         indent_writeln!(f, indent_count, "break")
     }
 }
@@ -61,7 +65,11 @@ impl Parsable for Continue {
 }
 
 impl IndentFormatter for Continue {
-    fn fmt_indent(&self, f: &mut core::fmt::Formatter<'_>, indent_count: usize) -> usize {
+    fn fmt_indent(
+        &self,
+        f: &mut core::fmt::Formatter<'_>,
+        indent_count: usize,
+    ) -> color_eyre::Result<usize> {
         indent_writeln!(f, indent_count, "continue")
     }
 }
@@ -131,7 +139,11 @@ impl Node {
 }
 
 impl IndentFormatter for Node {
-    fn fmt_indent(&self, f: &mut fmt::Formatter<'_>, indent_count: usize) -> usize {
+    fn fmt_indent(
+        &self,
+        f: &mut core::fmt::Formatter<'_>,
+        indent_count: usize,
+    ) -> color_eyre::Result<usize> {
         match self {
             Node::Start(val) => val.fmt_indent(f, indent_count),
             Node::Loop(val) => val.fmt_indent(f, indent_count),
@@ -151,7 +163,7 @@ impl IndentFormatter for Node {
 
 impl fmt::Display for Node {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        self.fmt_indent(f, 0);
+        self.fmt_indent(f, 0).map_err(|_| fmt::Error)?;
         Ok(())
     }
 }

@@ -10,13 +10,17 @@ pub struct FunctionCall {
 }
 
 impl IndentFormatter for FunctionCall {
-    fn fmt_indent(&self, f: &mut core::fmt::Formatter<'_>, indent_count: usize) -> usize {
-        indent_writeln!(f, indent_count, "{}(", self.name);
+    fn fmt_indent(
+        &self,
+        f: &mut core::fmt::Formatter<'_>,
+        indent_count: usize,
+    ) -> color_eyre::Result<usize> {
+        indent_writeln!(f, indent_count, "{}(", self.name)?;
         for (i, arg) in self.args.iter().enumerate() {
             if i > 0 {
-                indent_write!(f, indent_count, ", ");
+                indent_write!(f, indent_count, ", ")?;
             }
-            indent_write!(f, indent_count, "{arg}");
+            indent_write!(f, indent_count, "{arg}")?;
         }
         indent_writeln!(f, indent_count, ")")
     }

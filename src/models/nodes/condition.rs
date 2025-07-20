@@ -19,15 +19,19 @@ pub struct If {
 }
 
 impl IndentFormatter for If {
-    fn fmt_indent(&self, f: &mut core::fmt::Formatter<'_>, mut indent_count: usize) -> usize {
-        indent_count = indent_writeln!(f, indent_count, "if {}", self.condition);
+    fn fmt_indent(
+        &self,
+        f: &mut core::fmt::Formatter<'_>,
+        mut indent_count: usize,
+    ) -> color_eyre::Result<usize> {
+        indent_count = indent_writeln!(f, indent_count, "if {}", self.condition)?;
 
         indent_count += 1;
         for node in &self.body {
-            indent_count = node.fmt_indent(f, indent_count);
+            indent_count = node.fmt_indent(f, indent_count)?;
         }
 
-        indent_count
+        Ok(indent_count)
     }
 }
 
@@ -67,16 +71,20 @@ pub struct ElseIf {
 }
 
 impl IndentFormatter for ElseIf {
-    fn fmt_indent(&self, f: &mut core::fmt::Formatter<'_>, mut indent_count: usize) -> usize {
+    fn fmt_indent(
+        &self,
+        f: &mut core::fmt::Formatter<'_>,
+        mut indent_count: usize,
+    ) -> color_eyre::Result<usize> {
         indent_count -= 1;
-        indent_count = indent_writeln!(f, indent_count, "else if {}", self.condition);
+        indent_count = indent_writeln!(f, indent_count, "else if {}", self.condition)?;
 
         indent_count += 1;
         for node in &self.body {
-            indent_count = node.fmt_indent(f, indent_count);
+            indent_count = node.fmt_indent(f, indent_count)?;
         }
 
-        indent_count
+        Ok(indent_count)
     }
 }
 
@@ -115,16 +123,20 @@ pub struct Else {
 }
 
 impl IndentFormatter for Else {
-    fn fmt_indent(&self, f: &mut core::fmt::Formatter<'_>, mut indent_count: usize) -> usize {
+    fn fmt_indent(
+        &self,
+        f: &mut core::fmt::Formatter<'_>,
+        mut indent_count: usize,
+    ) -> color_eyre::Result<usize> {
         indent_count -= 1;
-        indent_writeln!(f, indent_count, "else");
+        indent_writeln!(f, indent_count, "else")?;
 
         indent_count += 1;
         for node in &self.body {
-            indent_count = node.fmt_indent(f, indent_count);
+            indent_count = node.fmt_indent(f, indent_count)?;
         }
 
-        indent_count
+        Ok(indent_count)
     }
 }
 

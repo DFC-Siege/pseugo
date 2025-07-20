@@ -14,7 +14,11 @@ impl Assignment {
 }
 
 impl IndentFormatter for Assignment {
-    fn fmt_indent(&self, f: &mut core::fmt::Formatter<'_>, indent_count: usize) -> usize {
+    fn fmt_indent(
+        &self,
+        f: &mut core::fmt::Formatter<'_>,
+        indent_count: usize,
+    ) -> color_eyre::Result<usize> {
         indent_writeln!(f, indent_count, "{} = {}", self.var, self.value)
     }
 }

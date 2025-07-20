@@ -1,5 +1,3 @@
-use core::fmt;
-
 use color_eyre::eyre::{Result, eyre};
 
 use crate::{
@@ -25,21 +23,25 @@ pub struct Loop {
 }
 
 impl IndentFormatter for Loop {
-    fn fmt_indent(&self, f: &mut fmt::Formatter<'_>, mut indent_count: usize) -> usize {
+    fn fmt_indent(
+        &self,
+        f: &mut core::fmt::Formatter<'_>,
+        mut indent_count: usize,
+    ) -> color_eyre::Result<usize> {
         match &self.loop_type {
             LoopType::While(condition) => {
-                indent_count = indent_writeln!(f, indent_count, "while {condition}");
+                indent_count = indent_writeln!(f, indent_count, "while {condition}")?;
             }
             LoopType::For { item, list } => {
-                indent_count = indent_writeln!(f, indent_count, "for {item} in {list}");
+                indent_count = indent_writeln!(f, indent_count, "for {item} in {list}")?;
             }
         }
 
         indent_count += 1;
         for n in &self.body {
-            indent_count = n.fmt_indent(f, indent_count);
+            indent_count = n.fmt_indent(f, indent_count)?;
         }
-        indent_count
+        Ok(indent_count)
     }
 }
 
