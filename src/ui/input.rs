@@ -1,4 +1,3 @@
-use color_eyre::owo_colors::{FgColorDisplay, OwoColorize};
 use ratatui::{
     Frame,
     layout::Rect,
