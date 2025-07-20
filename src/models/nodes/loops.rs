@@ -54,7 +54,7 @@ impl Parsable for Loop {
             LoopType::FOR => {
                 let (item, parts) = parts.split_first().ok_or(eyre!("can't get next element"))?;
                 let (list, parts) = parts.split_first().ok_or(eyre!("can't get next element"))?;
-                let body = Node::build_from_parts(parts)?;
+                let (body, parts) = Node::build_from_parts(parts)?;
                 Ok((
                     Box::new(Self {
                         loop_type: LoopType::For {
@@ -68,7 +68,8 @@ impl Parsable for Loop {
             }
             LoopType::WHILE => {
                 let (condition, parts) = Condition::parse(parts)?;
-                let body = Node::build_from_parts(parts)?;
+                let (body, parts) = Node::build_from_parts(parts)?;
+
                 Ok((
                     Box::new(Self {
                         loop_type: LoopType::While(*condition),

@@ -18,17 +18,7 @@ impl IndentFormatter for Start {
         indent_writeln!(f, indent_count, "start");
 
         for n in &self.body {
-            n.fmt_indent(f, indent_count + 1)?;
-        }
-        Ok(())
-    }
-}
-
-impl fmt::Display for Start {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        writeln!(f, "start")?;
-        for n in &self.body {
-            n.fmt_indent(f, 1)?;
+            n.fmt_indent(f, indent_count)?;
         }
         Ok(())
     }
@@ -48,7 +38,7 @@ impl Parsable for Start {
             return Err(eyre!("Expected '{}' but found '{}'", Self::KEYWORD, start));
         }
 
-        let body = Node::build_from_parts(parts)?;
+        let (body, parts) = Node::build_from_parts(parts)?;
 
         Ok((Box::new(Self { body }), parts))
     }

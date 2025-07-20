@@ -42,8 +42,23 @@ impl App {
 
         let pseudocode = "
         start
-        while true
-            assign c = 10
+        if x > 5
+            assign y = x + 10
+            while counter < 100
+                assign counter = counter + 1
+                if counter == 50
+                    return counter
+                elseif counter > 75
+                    assign x = x - 1
+                else
+                    assign y = y * 2
+                end
+            end
+            return y
+        else
+            assign result = function(x,y,z)
+            return !result
+        end
         ";
 
         let text = match Node::new(pseudocode) {

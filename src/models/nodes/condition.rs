@@ -51,7 +51,7 @@ impl Parsable for If {
         }
 
         let (condition, parts) = Condition::parse(parts)?;
-        let body = Node::build_from_parts(parts)?;
+        let (body, parts) = Node::build_from_parts(parts)?;
 
         Ok((
             Box::new(Self {
@@ -102,7 +102,7 @@ impl Parsable for ElseIf {
         }
 
         let (condition, parts) = Condition::parse(parts)?;
-        let body = Node::build_from_parts(parts)?;
+        let (body, parts) = Node::build_from_parts(parts)?;
 
         Ok((
             Box::new(Self {
@@ -150,7 +150,7 @@ impl Parsable for Else {
         if !Self::matches(start) {
             return Err(eyre!("first element is not else"));
         }
-        let body = Node::build_from_parts(parts)?;
+        let (body, parts) = Node::build_from_parts(parts)?;
 
         Ok((Box::new(Self { body }), parts))
     }

@@ -1,18 +1,23 @@
-use core::fmt;
-use std::fmt::Formatter;
-
 use color_eyre::eyre::{Result, eyre};
 
-use crate::models::nodes::parsing::Parsable;
+use crate::{
+    indent_writeln,
+    models::nodes::{formatter::IndentFormatter, parsing::Parsable},
+};
 
 pub struct End;
 impl End {
     const END: &'static str = "end";
 }
 
-impl fmt::Display for End {
-    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-        writeln!(f, "{}", Self::END)
+impl IndentFormatter for End {
+    fn fmt_indent(
+        &self,
+        f: &mut core::fmt::Formatter<'_>,
+        indent_count: usize,
+    ) -> core::fmt::Result {
+        indent_writeln!(f, indent_count - 1, "{}", Self::END);
+        Ok(())
     }
 }
 

@@ -8,6 +8,7 @@ use crate::{
         assignment::Assignment,
         comment::Comment,
         condition::{Else, ElseIf, If},
+        end::End,
         formatter::IndentFormatter,
         function::FunctionCall,
         loops::Loop,
@@ -83,6 +84,7 @@ pub enum Node {
     If(If),
     ElseIf(ElseIf),
     Else(Else),
+    End(End),
     Assignment(Assignment),
     FunctionCall(FunctionCall),
     Return(Return),
@@ -98,7 +100,7 @@ impl Node {
         Ok(start)
     }
 
-    pub fn build_from_parts<'a>(mut parts: &'a [&'a str]) -> Result<Vec<Self>> {
+    pub fn build_from_parts<'a>(mut parts: &'a [&'a str]) -> Result<(Vec<Self>, &'a [&'a str])> {
         let mut nodes = Vec::new();
 
         while !parts.is_empty() {
@@ -125,6 +127,7 @@ impl Node {
             try_parse!(If, If);
             try_parse!(ElseIf, ElseIf);
             try_parse!(Else, Else);
+            try_parse!(End, End);
             try_parse!(Assignment, Assignment);
             try_parse!(FunctionCall, FunctionCall);
             try_parse!(Return, Return);
@@ -134,7 +137,7 @@ impl Node {
             return Err(eyre!("Unknown node type: {first}"));
         }
 
-        Ok(nodes)
+        Ok((nodes, parts))
     }
 }
 
@@ -152,6 +155,7 @@ impl IndentFormatter for Node {
             Node::FunctionCall(val) => val.fmt_indent(f, indent_count),
             Node::Return(val) => val.fmt_indent(f, indent_count),
             Node::Comment(val) => val.fmt_indent(f, indent_count),
+            Node::End(val) => val.fmt_indent(f, indent_count),
         }?;
 
         Ok(())
