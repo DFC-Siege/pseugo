@@ -1,5 +1,5 @@
 use edtui::{EditorEventHandler, EditorState, Lines};
-use ratatui::crossterm::event::{self, Event, KeyCode, KeyEventKind, KeyModifiers};
+use ratatui::crossterm::event::{self, Event, KeyEventKind};
 use ratatui::{Terminal, prelude::Backend};
 
 use crate::{
@@ -25,20 +25,20 @@ impl App {
             "start
          if x > 5
              -- test --
-             assign y = x + 10
+             let y = x + 10
              while counter < 100
-        assign counter = counter + 1
+        let counter = counter + 1
         if counter == 50
             return counter
         elseif counter > 75
-            assign x = x - 1
+            let x = x - 1
         else
-            assign y = y * 2
+            let y = y * 2
         end
              end
              return y
          else
-             assign result = function(x,y,z)
+             let result = test(x, y, z)
              return !result
          end",
         );

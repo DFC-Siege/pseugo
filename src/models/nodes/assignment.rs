@@ -10,7 +10,7 @@ pub struct Assignment {
 }
 
 impl Assignment {
-    const KEYWORD: &'static str = "assign";
+    const KEYWORD: &'static str = "let";
 }
 
 impl IndentFormatter for Assignment {

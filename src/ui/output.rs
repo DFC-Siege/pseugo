@@ -21,7 +21,7 @@ pub fn render(frame: &mut Frame, rect: &Rect, state: &State, editor_state: &Edit
     let text: String = editor_state.lines.clone().into();
     let text: String = match State::get_output(text.as_str()) {
         Ok(node) => node.to_string(),
-        Err(_) => "".into(),
+        Err(e) => e.to_string(),
     };
     let styled_text: Text = text
         .lines()

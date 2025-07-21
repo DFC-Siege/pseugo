@@ -34,12 +34,42 @@ impl Expression {
         }
     }
 
-    fn parse_function_call<'a>(parts: &'a [&'a str]) -> Result<(Box<Self>, &'a [&'a str])> {
+    fn parse_function_call<'a>(
+        parts: &'a [&'a str],
+    ) -> color_eyre::Result<(Box<Self>, &'a [&'a str])> {
         let first = parts[0];
-        let paren_pos = first.find('(').unwrap();
+        let paren_pos = first
+            .find('(')
+            .ok_or_else(|| color_eyre::eyre::eyre!("No opening parenthesis found"))?;
         let name = &first[..paren_pos];
-        let args_str = &first[paren_pos + 1..first.len() - 1];
 
+        let mut full_call = String::new();
+        let mut paren_count = 0;
+        let mut consumed_parts = 0;
+
+        for (i, part) in parts.iter().enumerate() {
+            if i > 0 {
+                full_call.push(' ');
+            }
+            full_call.push_str(part);
+            consumed_parts = i + 1;
+
+            for ch in part.chars() {
+                match ch {
+                    '(' => paren_count += 1,
+                    ')' => paren_count -= 1,
+                    _ => {}
+                }
+            }
+
+            if paren_count == 0 {
+                break;
+            }
+        }
+
+        let start_pos = full_call.find('(').unwrap();
+        let end_pos = full_call.rfind(')').unwrap();
+        let args_str = &full_call[start_pos + 1..end_pos];
         let args = Self::parse_function_arguments(args_str)?;
 
         Ok((
@@ -47,21 +77,22 @@ impl Expression {
                 name: name.to_string(),
                 args,
             }),
-            &parts[1..],
+            &parts[consumed_parts..],
         ))
     }
 
-    fn parse_function_arguments(args_str: &str) -> Result<Vec<Expression>> {
+    fn parse_function_arguments(args_str: &str) -> color_eyre::Result<Vec<Expression>> {
         let mut args = Vec::new();
-
-        if !args_str.is_empty() {
+        if !args_str.trim().is_empty() {
             for arg_str in args_str.split(',') {
-                let arg_parts = vec![arg_str.trim()];
-                let (arg_expr, _) = Self::parse(&arg_parts)?;
-                args.push(*arg_expr);
+                let trimmed = arg_str.trim();
+                if !trimmed.is_empty() {
+                    let arg_parts: Vec<&str> = trimmed.split_whitespace().collect();
+                    let (arg_expr, _) = Self::parse(&arg_parts)?;
+                    args.push(*arg_expr);
+                }
             }
         }
-
         Ok(args)
     }
 
@@ -110,7 +141,7 @@ impl Parsable for Expression {
             return Self::parse_not_expression(parts);
         }
 
-        if first.contains('(') && first.ends_with(')') {
+        if first.contains('(') {
             return Self::parse_function_call(parts);
         }
 
