@@ -1,29 +1,27 @@
+use crate::models::state::{AppState, State};
+use edtui::{EditorState, EditorTheme, EditorView};
 use ratatui::{
     Frame,
     layout::Rect,
-    style::{Color, Style, Stylize},
-    text::{Line, Text},
-    widgets::{Block, Borders, Paragraph, Widget},
+    style::{Color, Style},
+    widgets::{Block, Borders, Widget},
 };
 
-use crate::models::state::{AppState, State};
-
-pub fn render(frame: &mut Frame, rect: &Rect, state: &State) {
+pub fn render(frame: &mut Frame, rect: &Rect, state: &State, editor_state: &mut EditorState) {
     let color = match state.app_state {
-        AppState::LeftSelected(_) => Color::Yellow,
+        AppState::LeftSelected => Color::Yellow,
         _ => Color::White,
     };
     let block = Block::new()
         .style(Style::default().fg(color))
         .borders(Borders::all())
         .title_top("edit");
-    let text = state.input.to_string();
-    let styled_text: Text = text
-        .lines()
-        .map(|line| Line::from(line).white())
-        .collect::<Vec<Line>>()
-        .into();
-    Paragraph::new(styled_text)
+
+    let theme = EditorTheme::default()
         .block(block)
+        .base(Style::default().bg(Color::Reset).fg(Color::White));
+    EditorView::new(editor_state)
+        .theme(theme)
+        .wrap(true)
         .render(*rect, frame.buffer_mut());
 }
