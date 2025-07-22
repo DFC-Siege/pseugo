@@ -25,7 +25,7 @@ impl AppHandler {
         {
             // Windows: %APPDATA%\todo\state.json
             let appdata =
-                std::env::var("APPDATA").map_err(|_| "APPDATA environment variable not found")?;
+                std::env::var("APPDATA").map_err(|_| color_eyre::eyre::eyre!("APPDATA environment variable not found"))?;
             Ok(PathBuf::from(appdata).join(app_name).join(filename))
         }
 

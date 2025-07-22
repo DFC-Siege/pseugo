@@ -62,8 +62,11 @@ impl App {
             let event = event::read()?;
 
             if let Event::Key(key) = event
-                && key.kind == KeyEventKind::Press
             {
+                if key.kind != KeyEventKind::Press {
+                    continue;
+                }
+
                 InputHandler::handle_key_event(
                     &mut self.state,
                     &mut self.editor_state,
